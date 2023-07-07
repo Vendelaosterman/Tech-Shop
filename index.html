@@ -14,14 +14,30 @@
     <section class="wrapper1">
         <div class="content wr">
             <h2>Joe Banker</h2>
-            <div class="banker-wr">
-
+            
+            <div class="container">
+                <h3>Balance</h3>
+                <h3><span id="balance"></span> Kr</h3>
             </div>
-            <button></button>
-
+            <div class="container" id="outstandingloan-section">
+                <h3>Outstanding loan</h3>
+                <h3><span id="outstanding"></span> Kr</h3>
+            </div>
+            <div class="btn-wr">
+            <button class="btn btn-white" id="repay">Repay Loan</button>
+            <button class="btn btn-orange" id="loan">Get a loan</button>
+             </div>
         </div>
         <div class="content wr">
             <h2>Work</h2>
+            <div class="container">
+                <h3>Salary</h3>
+                <h3><span id="salary"></span> Kr</h3>
+            </div>
+            <div class="btn-wr">
+                <button class="btn btn-white" id="bank">Bank</button>
+                <button class="btn btn-orange" id="work">Work</button>
+             </div>
 
         </div>
         <div class="content wr">
@@ -39,18 +55,15 @@
             </div>
         </div>
     </section>
-    <div class="compdetails wr">
-        <img src="" class="computerImg">
-        <h3 class="errorMsg">No image</h3>
+    <div class="compdetails wr">     
+            <img src="" class="computerImg">
         <div class="details">
         <div>
-            <h1 class="name">bla bla bla</h1>
-            <p class="description">bla bla bla bla</p>
+            <h1 class="name"></h1>
+            <p class="description"></p>
         </div>
-        <div>
-            <h2><span class="price">100</span> NOK</h2>
-            <button class="buyBtn btn">BUY NOW</button>
-        </div>
+            <h2><span class="price"></span> NOK</h2>
+            <button class="btn btn-orange" id="buy">BUY NOW</button>
         </div>
     </div>
 </body>

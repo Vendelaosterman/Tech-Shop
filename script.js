@@ -1,27 +1,110 @@
 const API_URL = "https://hickory-quilled-actress.glitch.me/computers";
 let computerData = [];
+
+
+//Elements
+const loanBtn = document.getElementById('loan');
+const workBtn = document.getElementById('work');
+const bankBtn = document.getElementById('bank');
+const repayBtn = document.getElementById('repay');
+const buyBtn = document.getElementById('repay');
 const dropdownBtn = document.getElementsByClassName('dropdownBtn')[0];
 const dropdownBtnText = dropdownBtn.getElementsByTagName('span')[0];
+const outstandingValueElem = document.getElementById('outstanding');
+const balanceElem = document.getElementById('balance');
+const salaryElem = document.getElementById('salary');
 
-getComputerData();
+//Event listeners
+loanBtn.addEventListener("click", increaseLoan);
+workBtn.addEventListener("click", increaseSalary);
+bankBtn.addEventListener("click", transferSalary);
+repayBtn.addEventListener("click", decreaseLoan);
+buyBtn.addEventListener("click", buyComputer);
 
-// XMLHTTP req
+//Values
+let outstanding = 0;
+let balance = 0;
+let salary = 0;
+let loanTaken = false;
 
-function getComputerData() {
-    let req = new XMLHttpRequest();
-    req.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        computerData = JSON.parse(this.responseText);
-        //response = JSON.parse(this.responseText);
-        displayDropdownContent() 
-        showDetails();
-      }
-    };
-    req.open("GET", API_URL, true);
-    req.send();
+balanceElem.innerHTML = balance;
+salaryElem.innerHTML = salary;
+
+//Avoke function
+fetchComputerData();
+
+
+function increaseLoan(){
+    userInput = parseInt(prompt("Enter amount")); 
+    let loanApproval = checkLoanApproval(userInput);
+
+    if(loanApproval){
+        outstanding += userInput;
+        balance += userInput;
+        document.getElementById("outstandingloan-section").style.display="flex";
+        outstandingValueElem.innerHTML = outstanding;
+        repayBtn.style.display = "inline";
+        updateValues();
+    }else{
+        alert("You are not allowed to take a loan")
+    }
+  
 }
 
-// FETCH async 
+function increaseSalary(){
+    salary += 100;
+    salaryElem.innerHTML = salary;
+}
+
+function transferSalary(){
+    if(outstanding > 0){
+        outstanding += salary * 0.1;
+        balance += salary * 0.9; 
+    }else{
+        balance += salary;
+    }
+    
+    salary = 0 ;
+    updateValues();
+}
+
+function decreaseLoan(){
+    console.log("hej");
+    let diff = salary-outstanding;
+    outstanding -= outstanding;
+    balance += diff;
+    salary = 0;
+    updateValues();
+}
+
+function updateValues(){
+    balanceElem.innerHTML = balance;
+    salaryElem.innerHTML = salary;
+    outstandingValueElem.innerHTML = outstanding;
+}
+
+function checkLoanApproval(userInput){
+
+    if(userInput > (balance * 2)){// checks if loan is more than double of bank balance 
+        return false
+    }else if(loanTaken){ // checks if a loan is already taken 
+        return false
+    }else{
+        return true
+    }
+}
+
+function fetchComputerData(){
+    fetch(API_URL)
+    .then(response => response.json())
+    .then(json => {
+        computerData = json
+        console.log("THE FETCH JSON DATA", json);
+        displayDropdownContent();
+
+    })
+    .catch(error => console.error(error.message))
+}
 
 function displayDropdownContent(){
 
@@ -39,6 +122,8 @@ function displayDropdownContent(){
             showDetails();
         });
     }
+
+    showDetails();
 
 }
 
@@ -61,8 +146,6 @@ function showDetails(){
         ulElem.removeChild(ulElem.firstChild);
     }
 
-    errorMsg.style.visibility = "hidden";
-
     for (key in computerData) {
         if(computerData[key].title == selected){
             let specs = computerData[key].specs;
@@ -72,8 +155,7 @@ function showDetails(){
             compImg.src = "https://hickory-quilled-actress.glitch.me/" + computerData[key].image;
 
             compImg.onerror = function() { //  check if an img error occurs 
-                compImg.style.visibility = "hidden";
-                errorMsg.style.visibility = "visible";
+                compImg.src="no_image_placeholder.png";
             }
 
             for (key in specs) {
@@ -86,32 +168,6 @@ function showDetails(){
     }
 }
 
- /*async function fetchComputerDetails(){
-    try{
-        const response = await fetch(API_URL);
-        const json = await response.json();
-        computerAsync = json;
-        console.log("Log from inside the async funktion", computerAsync)
-    }
+function buyComputer(){
 
-    catch(error){
-        console.error(error.message);
-    }
 }
-
-getSomeDataAsync(){
-    console.log("log from global context", computerAsync);
-}*/ 
-
-
-// FETCH
-
-/*function newFetch(){
-    fetch(API_URL)
-    .then(response => response.json())
-    .then(json => {
-        computerData = json
-        console.log("THE FETCH JSON DATA", json);
-    })
-    .catch(error => console.error(error.message))
-}*/
