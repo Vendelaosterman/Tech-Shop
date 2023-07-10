@@ -1,13 +1,9 @@
-const API_URL = "https://hickory-quilled-actress.glitch.me/computers";
-let computerData = [];
-
-
 //Elements
 const loanBtn = document.getElementById('loan');
 const workBtn = document.getElementById('work');
 const bankBtn = document.getElementById('bank');
 const repayBtn = document.getElementById('repay');
-const buyBtn = document.getElementById('repay');
+const buyBtn = document.getElementById('buy');
 const dropdownBtn = document.getElementsByClassName('dropdownBtn')[0];
 const dropdownBtnText = dropdownBtn.getElementsByTagName('span')[0];
 const outstandingValueElem = document.getElementById('outstanding');
@@ -22,15 +18,18 @@ repayBtn.addEventListener("click", decreaseLoan);
 buyBtn.addEventListener("click", buyComputer);
 
 //Values
+const API_URL = "https://hickory-quilled-actress.glitch.me/computers";
+let computerData = [];
 let outstanding = 0;
 let balance = 0;
 let salary = 0;
 let loanTaken = false;
+let selected = "";
 
 balanceElem.innerHTML = balance;
 salaryElem.innerHTML = salary;
 
-//Avoke function
+//Invoke function
 fetchComputerData();
 
 
@@ -69,7 +68,6 @@ function transferSalary(){
 }
 
 function decreaseLoan(){
-    console.log("hej");
     let diff = salary-outstanding;
     outstanding -= outstanding;
     balance += diff;
@@ -119,6 +117,7 @@ function displayDropdownContent(){
         pTag.innerHTML = title;
         pTag.addEventListener("click", function(){
             dropdownBtnText.innerHTML = this.innerHTML;
+            currentLaptop = this.innerHTML;
             showDetails();
         });
     }
@@ -129,7 +128,7 @@ function displayDropdownContent(){
 
 function showDetails(){
 
-    let selected = dropdownBtnText.innerHTML;
+    selected = dropdownBtnText.innerHTML;
 
     let compName = document.getElementsByClassName('name')[0];
     let compDescription = document.getElementsByClassName('description')[0];
@@ -169,5 +168,17 @@ function showDetails(){
 }
 
 function buyComputer(){
+    console.log(selected);
 
+    for (key in computerData) {
+        if(computerData[key].title == selected){
+            if (balance < computerData[key].price){
+                alert("Unfortunately, you don't have enough money in your bank account")
+            }else{
+                balance -= computerData[key].price;
+                alert("Congratulations! You are now the owner of the " + selected);
+                updateValues();
+            }
+        }
+    }
 }
