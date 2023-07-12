@@ -23,18 +23,22 @@ let computerData = [];
 let outstanding = 0;
 let balance = 0;
 let salary = 0;
-let loanTaken = false;
 let selected = "";
 
 balanceElem.innerHTML = balance;
 salaryElem.innerHTML = salary;
 
-//Invoke function
 fetchComputerData();
 
-
+//increase the loan 
 function increaseLoan(){
-    userInput = parseInt(prompt("Enter amount")); 
+    let userInput = prompt("enter amount");
+    userInput = parseInt(userInput);
+
+    if(isNaN(userInput) || userInput === null){
+        return
+    }
+    
     let loanApproval = checkLoanApproval(userInput);
 
     if(loanApproval){
@@ -50,11 +54,13 @@ function increaseLoan(){
   
 }
 
+//increase the salary
 function increaseSalary(){
     salary += 100;
     salaryElem.innerHTML = salary;
 }
 
+//transfer the salary 
 function transferSalary(){
     if(outstanding > 0){
         outstanding -= salary * 0.1;
@@ -67,6 +73,7 @@ function transferSalary(){
     updateValues();
 }
 
+//decrease loan 
 function decreaseLoan(){
     let diff = salary-outstanding;
     outstanding -= outstanding;
@@ -75,23 +82,27 @@ function decreaseLoan(){
     updateValues();
 }
 
+
+// updates the values in joe banker and work section
 function updateValues(){
     balanceElem.innerHTML = balance;
     salaryElem.innerHTML = salary;
     outstandingValueElem.innerHTML = outstanding;
 }
 
+// checks if the user can take a loan 
 function checkLoanApproval(userInput){
 
-    if(userInput > (balance * 2)){// checks if loan is more than double of bank balance 
-        return false
-    }else if(loanTaken){ // checks if a loan is already taken 
-        return false
-    }else{
+    // checks if loan is less than double of bank balance or if there is already a loan 
+    if(userInput <  (balance * 2) && outstanding == 0){
+        //isApproved = true;
         return true
+    }else{
+        return false
     }
 }
 
+// call API and fetch data 
 function fetchComputerData(){
     fetch(API_URL)
     .then(response => response.json())
@@ -104,6 +115,8 @@ function fetchComputerData(){
     .catch(error => console.error(error.message))
 }
 
+
+// display contents of the dropdown btn
 function displayDropdownContent(){
 
     let dropdownDiv = document.getElementsByClassName('dropdown-content')[0];
@@ -126,6 +139,7 @@ function displayDropdownContent(){
 
 }
 
+// display details of the computer 
 function showDetails(){
 
     selected = dropdownBtnText.innerHTML;
@@ -153,7 +167,7 @@ function showDetails(){
             compImg.src = "https://hickory-quilled-actress.glitch.me/" + computerData[key].image;
 
             compImg.onerror = function() { //  check if an img error occurs 
-                compImg.src="no_image_placeholder.png";
+                compImg.src="img/no_image_placeholder.png";
             }
 
             for (key in specs) {
@@ -166,6 +180,7 @@ function showDetails(){
     }
 }
 
+// checks if the user can buy a computer or not 
 function buyComputer(){
 
     for (key in computerData) {
