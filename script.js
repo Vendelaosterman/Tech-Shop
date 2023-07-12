@@ -57,7 +57,7 @@ function increaseSalary(){
 
 function transferSalary(){
     if(outstanding > 0){
-        outstanding += salary * 0.1;
+        outstanding -= salary * 0.1;
         balance += salary * 0.9; 
     }else{
         balance += salary;
@@ -134,7 +134,6 @@ function showDetails(){
     let compDescription = document.getElementsByClassName('description')[0];
     let compPrice = document.getElementsByClassName('price')[0];
     let compImg = document.getElementsByClassName('computerImg')[0];
-    let errorMsg = document.getElementsByClassName('errorMsg')[0];
 
     dropdownBtnText.innerHTML = selected;
     compName.innerHTML = selected;
@@ -168,7 +167,6 @@ function showDetails(){
 }
 
 function buyComputer(){
-    console.log(selected);
 
     for (key in computerData) {
         if(computerData[key].title == selected){
